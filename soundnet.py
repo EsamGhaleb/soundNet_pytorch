@@ -22,7 +22,7 @@ class SoundNet(nn.Module):
 	def __init__(self):
 		super(SoundNet, self).__init__()
 		
-		self.conv1 = nn.Conv2d(1, 16, kernel_size=(64, 1), stride=(2 , 1), padding=(32, 0))
+		self.conv1 = nn.Conv2d(1, 16, kernel_size=(64, 1), stride=(2, 1), padding=(32, 0))
 		print("Conv1", self.conv1.weight.shape, self.conv1.bias.shape)
 		self.batchnorm1 = nn.BatchNorm2d(16, eps=1e-5, momentum=0.1)
 		print("Bn1", self.batchnorm1.weight.shape, self.batchnorm1.bias.shape)
@@ -42,34 +42,34 @@ class SoundNet(nn.Module):
 		print("Bn3", self.batchnorm3.weight.shape, self.batchnorm3.bias.shape)
 		self.relu3 = nn.ReLU(True)
 		
-		self.conv4 = nn.Conv2d(64, 128, kernel_size=(8, 1), stride=(2, 1),  padding=(4, 0))
+		self.conv4 = nn.Conv2d(64, 128, kernel_size=(8, 1), stride=(2, 1), padding=(4, 0))
 		print("Conv4", self.conv4.weight.shape, self.conv4.bias.shape)
 		self.batchnorm4 = nn.BatchNorm2d(128, eps=1e-5, momentum=0.1)
 		print("Bn4", self.batchnorm4.weight.shape, self.batchnorm4.bias.shape)
 		self.relu4 = nn.ReLU(True)
-
+		
 		self.conv5 = nn.Conv2d(128, 256, kernel_size=(4, 1), stride=(2, 1), padding=(2, 0))
 		print("Conv5", self.conv5.weight.shape, self.conv5.bias.shape)
 		self.batchnorm5 = nn.BatchNorm2d(256, eps=1e-5, momentum=0.1)
 		print("Bn5", self.batchnorm5.weight.shape, self.batchnorm5.bias.shape)
 		self.relu5 = nn.ReLU(True)
-		self.maxpool5 = nn.MaxPool2d((4, 1),  stride=(4, 1))
-
+		self.maxpool5 = nn.MaxPool2d((4, 1), stride=(4, 1))
+		
 		self.conv6 = nn.Conv2d(256, 512, kernel_size=(4, 1), stride=(2, 1), padding=(2, 0))
 		print("Conv6", self.conv6.weight.shape, self.conv6.bias.shape)
 		self.batchnorm6 = nn.BatchNorm2d(512, eps=1e-5, momentum=0.1)
 		print("Bn6", self.batchnorm6.weight.shape, self.batchnorm6.bias.shape)
 		self.relu6 = nn.ReLU(True)
-
+		
 		self.conv7 = nn.Conv2d(512, 1024, kernel_size=(4, 1), stride=(2, 1), padding=(2, 0))
 		print("Conv7", self.conv7.weight.shape, self.conv7.bias.shape)
 		self.batchnorm7 = nn.BatchNorm2d(1024, eps=1e-5, momentum=0.1)
 		print("Bn7", self.batchnorm7.weight.shape, self.batchnorm7.bias.shape)
 		self.relu7 = nn.ReLU(True)
-
-		self.conv8_objs = nn.Conv2d(1024, 1000, kernel_size=(8 ,1), stride=(2, 1))
+		
+		self.conv8_objs = nn.Conv2d(1024, 1000, kernel_size=(8, 1), stride=(2, 1))
 		print("Conv81", self.conv8_objs.weight.shape, self.conv8_objs.bias.shape)
-		self.conv8_scns = nn.Conv2d(1024, 401, kernel_size=(8 ,1), stride=(2, 1))
+		self.conv8_scns = nn.Conv2d(1024, 401, kernel_size=(8, 1), stride=(2, 1))
 		print("Conv82", self.conv8_scns.weight.shape, self.conv8_scns.bias.shape)
 	
 	def forward(self, waveform):
@@ -81,57 +81,19 @@ class SoundNet(nn.Module):
 			waveform.cuda()
 		
 		out = self.conv1(waveform)
-		print(np.max(out.data.numpy()))
-		print(np.min(out.data.numpy()))
+		print('Max value of conv1: {:.4f}'.format(np.max(out.data.numpy())))
+		print('Min value of conv1: {:.4f}'.format(np.min(out.data.numpy())))
 		out = self.batchnorm1(out)
-		print(np.max(out.data.numpy()))
-		print(np.min(out.data.numpy()))
+		print('Max value of BN1: {:.4f}'.format(np.max(out.data.numpy())))
+		print('Min value of BN1: {:.4f}'.format(np.min(out.data.numpy())))
 		out = self.relu1(out)
-		print(np.max(out.data.numpy()))
-		print(np.min(out.data.numpy()))
+		print('Max value of relU1: {:.4f}'.format(np.max(out.data.numpy())))
+		print('Min value of relu1: {:.4f}'.format(np.min(out.data.numpy())))
 		out = self.maxpool1(out)
-		print(np.max(out.data.numpy()))
-		print(np.min(out.data.numpy()))
+		print('Max value of maxpool1: {:.4f}'.format(np.max(out.data.numpy())))
+		print('Min value of maxpool1: {:.4f}'.format(np.min(out.data.numpy())))
 		
-		import pdb
-		pdb.set_trace()
-		out = self.conv2(out)
-		out = self.batchnorm2(out)
-		out = self.relu2(out)
-		out = self.maxpool2(out)
-
-		out = self.conv3(out)
-		out = self.batchnorm3(out)
-		out = self.relu3(out)
-
-		out = self.conv4(out)
-		out = self.batchnorm4(out)
-		out = self.relu4(out)
-		
-		output = out
-		#
-		# out = self.conv5(out)
-		# out = self.batchnorm5(out)
-		# out = self.relu5(out)
-		# out = self.maxpool5(out)
-		#
-		# out = self.conv6(out)
-		# out = self.batchnorm6(out)
-		# out = self.relu6(out)
-		#
-		# out = self.conv7(out)
-		# out = self.batchnorm7(out)
-		# out = self.relu7(out)
-		#
-		# p_objs = self.conv8_objs(out)
-		# p_scns = self.conv8_scns(out)
-		#
-		# # return (nn.Softmax(dim=1)(p_objs), nn.Softmax(dim=1)(p_scns))
-		# # return (nn.Softmax(dim=1)(p_objs)).data.numpy()
-		#
-		print(np.max(output.data.numpy()))
-		print(np.min(output.data.numpy()))
-		return output.data.numpy()
+		return out.data.numpy()
 	
 	@staticmethod
 	def put_weights(batchnorm, conv, params_w, batch_norm=True):
@@ -143,7 +105,7 @@ class SoundNet(nn.Module):
 			bn_mean = params_w['mean']
 			batchnorm.mean = torch.nn.Parameter(torch.from_numpy(bn_mean))
 			bn_var = params_w['var']
-			batchnorm.var = torch.nn.Parameter(torch.from_numpy(bn_var))
+			batchnorm.variance = torch.nn.Parameter(torch.from_numpy(bn_var))
 		
 		conv_bs = params_w['biases']
 		conv.bias = torch.nn.Parameter(torch.from_numpy(conv_bs))
@@ -178,12 +140,11 @@ class SoundNet(nn.Module):
 		self.batchnorm7, self.conv7 = self.put_weights(self.batchnorm7, self.conv7, params_w)
 		
 		params_w = param_G['conv8']
-		_ , self.conv8_objs = self.put_weights([], self.conv8_objs, params_w, batch_norm=False)
+		_, self.conv8_objs = self.put_weights([], self.conv8_objs, params_w, batch_norm=False)
 		params_w = param_G['conv8_2']
 		_, self.conv8_scns = self.put_weights([], self.conv8_scns, params_w, batch_norm=False)
-
 		
-
+		
 # @mem.cache()
 def extract_features():
 	
