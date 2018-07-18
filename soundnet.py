@@ -103,9 +103,9 @@ class SoundNet(nn.Module):
 			bn_ws = params_w['gamma']
 			batchnorm.weight = torch.nn.Parameter(torch.from_numpy(bn_ws))
 			bn_mean = params_w['mean']
-			batchnorm.mean = torch.nn.Parameter(torch.from_numpy(bn_mean))
+			batchnorm.running_mean.data = torch.nn.Parameter(torch.from_numpy(bn_mean))
 			bn_var = params_w['var']
-			batchnorm.variance = torch.nn.Parameter(torch.from_numpy(bn_var))
+			batchnorm.running_var.data = torch.nn.Parameter(torch.from_numpy(bn_var))
 		
 		conv_bs = params_w['biases']
 		conv.bias = torch.nn.Parameter(torch.from_numpy(conv_bs))
