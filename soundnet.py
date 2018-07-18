@@ -99,19 +99,19 @@ class SoundNet(nn.Module):
 	def put_weights(batchnorm, conv, params_w, batch_norm=True):
 		if batch_norm:
 			bn_bs = params_w['beta']
-			batchnorm.bias = torch.nn.Parameter(torch.from_numpy(bn_bs))
+			batchnorm.bias.data = torch.nn.Parameter(torch.from_numpy(bn_bs))
 			bn_ws = params_w['gamma']
-			batchnorm.weight = torch.nn.Parameter(torch.from_numpy(bn_ws))
+			batchnorm.weight.data = torch.nn.Parameter(torch.from_numpy(bn_ws))
 			bn_mean = params_w['mean']
 			batchnorm.running_mean.data = torch.nn.Parameter(torch.from_numpy(bn_mean))
 			bn_var = params_w['var']
 			batchnorm.running_var.data = torch.nn.Parameter(torch.from_numpy(bn_var))
 		
 		conv_bs = params_w['biases']
-		conv.bias = torch.nn.Parameter(torch.from_numpy(conv_bs))
+		conv.bias.data = torch.nn.Parameter(torch.from_numpy(conv_bs))
 		conv_ws = params_w['weights']
 		conv_ws = torch.from_numpy(conv_ws).permute(3, 2, 0, 1)
-		conv.weight = torch.nn.Parameter(conv_ws)
+		conv.weight.data = torch.nn.Parameter(conv_ws)
 		
 		return batchnorm, conv
 	
@@ -143,12 +143,11 @@ class SoundNet(nn.Module):
 		_, self.conv8_objs = self.put_weights([], self.conv8_objs, params_w, batch_norm=False)
 		params_w = param_G['conv8_2']
 		_, self.conv8_scns = self.put_weights([], self.conv8_scns, params_w, batch_norm=False)
-		
-		
+
+
 # @mem.cache()
 def extract_features():
-	
-	audio_txt = 'audio_files.txt'
+	audio_txt = 'enterface_audio_files.txt'
 	
 	model = SoundNet()
 	model.load_weights()
@@ -158,23 +157,18 @@ def extract_features():
 	
 	print(LEN_WAVEFORM / 6)
 	print(model)
-	model.zero_grad()
 	features = {}
 	features['feats'] = []
 	features['paths'] = []
-	import pdb
-	model.train()
+	model.eval()
 	for idx, sound_sample in enumerate(sound_samples):
 		print(audio_paths[idx])
 		new_sample = torch.from_numpy(sound_sample)
 		output = model.forward(new_sample)
 		features['feats'].append(output)
 		features['paths'].append(audio_paths[idx])
-		# pdb.set_trace()
-		# print(output)
 	return features
+
 
 if __name__ == '__main__':
 	extract_features()
-
-
